@@ -1,6 +1,11 @@
 import env from "#config/env/env.js";
 import { Knex } from "knex";
 import { z } from "zod";
+import { fileURLToPath } from 'url';
+import path from "path";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const connectionSchema = z.object({
     host: z.string(),
@@ -18,10 +23,10 @@ const knegConfigs: Record<typeof NODE_ENV, Knex.Config> = {
         connection: () =>
             connectionSchema.parse({
                 host: env.POSTGRES_HOST ?? "localhost",
-                port: env.POSTGRES_PORT ?? 5432,
+                port: env.POSTGRES_PORT ?? 5432, 
                 database: env.POSTGRES_DB ?? "postgres",
                 user: env.POSTGRES_USER ?? "postgres",
-                password: env.POSTGRES_PASSWORD ?? "postgres",
+                password: env.POSTGRES_PASSWORD ?? "dinar2202",
             }),
         pool: {
             min: 2,
@@ -29,13 +34,13 @@ const knegConfigs: Record<typeof NODE_ENV, Knex.Config> = {
         },
         migrations: {
             stub: 'src/config/knex/migration.stub.js',
-            directory: "./src/postgres/migrations",
+            directory: path.join(__dirname, "..", "..", "postgres", "migrations"),
             tableName: "migrations",
             extension: "ts",
         },
         seeds: {
             stub: 'src/config/knex/seed.stub.js',
-            directory: "./src/postgres/seeds",
+            directory: "src/postgres/seeds",
             extension: "js",
         },
     },
@@ -55,7 +60,7 @@ const knegConfigs: Record<typeof NODE_ENV, Knex.Config> = {
         },
         migrations: {
             stub: 'dist/config/knex/migration.stub.js',
-            directory: "./dist/postgres/migrations",
+            directory: path.join(__dirname, "..", "..", "dist", "postgres", "migrations"),
             tableName: "migrations",
             extension: "js",
         },

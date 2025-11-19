@@ -16,6 +16,7 @@ export async function up(knex: Knex): Promise<void> {
         table.decimal("box_delivery_marketplace_coef_expr").nullable();
         table.decimal("box_delivery_marketplace_base").nullable();
         table.timestamp("created_at").defaultTo(knex.fn.now());
+        table.unique(["date", "warehouse_name"]);
     });
 }
 

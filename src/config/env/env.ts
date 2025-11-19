@@ -4,6 +4,7 @@ dotenv.config();
 
 const envSchema = z.object({
     NODE_ENV: z.union([z.undefined(), z.enum(["development", "production"])]),
+
     POSTGRES_HOST: z.union([z.undefined(), z.string()]),
     POSTGRES_PORT: z
         .string()
@@ -12,6 +13,7 @@ const envSchema = z.object({
     POSTGRES_DB: z.string(),
     POSTGRES_USER: z.string(),
     POSTGRES_PASSWORD: z.string(),
+
     APP_PORT: z.union([
         z.undefined(),
         z
@@ -19,6 +21,7 @@ const envSchema = z.object({
             .regex(/^[0-9]+$/)
             .transform((value) => parseInt(value)),
     ]),
+    API_KEY_WB: z.string().min(1, "WB API KEY отсутствует или недействителен"),
 });
 
 const env = envSchema.parse({
@@ -29,6 +32,7 @@ const env = envSchema.parse({
     POSTGRES_PASSWORD: process.env.POSTGRES_PASSWORD,
     NODE_ENV: process.env.NODE_ENV,
     APP_PORT: process.env.APP_PORT,
+    API_KEY_WB: process.env.API_KEY_WB,
 });
 
 export default env;

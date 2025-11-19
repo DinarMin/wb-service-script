@@ -26,11 +26,11 @@ function logMigrationList(list: [{ name: string }[], { file: string }[]]) {
 }
 
 function logSeedRun(result: [string[]]) {
-    if(result[0].length === 0) {
+    if (result[0].length === 0) {
         console.log("No seeds to run");
     }
     console.log(`Ran ${result[0].length} seed files`);
-    for(const seed of result[0]) {
+    for (const seed of result[0]) {
         console.log("- " + seed?.split(/\/|\\/).pop());
     }
     // Ran 5 seed files
@@ -77,3 +77,31 @@ export const seed = {
         logSeedMake(await knex.seed.make(name));
     },
 };
+
+// Запись данных в БД
+
+export async function saveTariffs(tariffs: any): Promise<void> {
+    try {
+        return await knex.transaction(async (t) => {
+            for (const item of tariffs) {
+                await t("tariffs").insert({
+                    date: item.date,
+                    warehouse_name: item.warehouse_name,
+                    geo_name: item.geo_name,
+                    box_storage_liter: item.box_storage_liter,
+                    box_storage_coef_expr: item.box_storage_coef_expr,
+                    box_storage_base: item.box_storage_base,
+                    box_delivery_marketplace_liter: item.box_delivery_marketplace_liter,
+                    box_delivery_marketplace_coef_expr: item.box_delivery_marketplace_coef_expr,
+                    box_delivery_marketplace_base: item.box_delivery_marketplace_base,
+                    box_delivery_liter: item.box_delivery_liter,
+                    box_delivery_coef_expr: item.box_delivery_coef_expr,
+                    box_delivery_base: item.box_delivery_base,
+                });
+            }
+        });
+    } catch (error) {
+        console.error(error);
+        throw new Error("Ошибка в транзакции/записи WB API tariffs в базу данных");
+    }
+}
