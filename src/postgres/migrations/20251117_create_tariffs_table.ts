@@ -3,7 +3,6 @@ import type { Knex } from "knex";
 export async function up(knex: Knex): Promise<void> {
     await knex.schema.createTable("tariffs", (table) => {
         table.increments("id").primary();
-        table.date("date").notNullable();
         table.string("warehouse_name").notNullable();
         table.string("geo_name").nullable();
         table.decimal("box_storage_liter").nullable();
@@ -15,8 +14,9 @@ export async function up(knex: Knex): Promise<void> {
         table.decimal("box_delivery_marketplace_liter").nullable();
         table.decimal("box_delivery_marketplace_coef_expr").nullable();
         table.decimal("box_delivery_marketplace_base").nullable();
-        table.timestamp("created_at").defaultTo(knex.fn.now());
+        table.string("date").notNullable();
         table.unique(["date", "warehouse_name"]);
+        table.timestamp("created_at").defaultTo(knex.fn.now());
     });
 }
 
