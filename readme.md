@@ -1,54 +1,76 @@
-# Шаблон для выполнения тестового задания
+# Wildberries Tariffs Service
+
+Сервис для получения тарифов на коробки от Wildberries и выгрузки их в Google Таблицы.
+
+---
 
 ## Описание
-Шаблон подготовлен для того, чтобы попробовать сократить трудоемкость выполнения тестового задания.
 
-В шаблоне настоены контейнеры для `postgres` и приложения на `nodejs`.  
-Для взаимодействия с БД используется `knex.js`.  
-В контейнере `app` используется `build` для приложения на `ts`, но можно использовать и `js`.
+Приложение:
 
-Шаблон не является обязательным!\
-Можно использовать как есть или изменять на свой вкус.
+- Получает данные с WB API (`https://common-api.wildberries.ru/api/v1/tariffs/box`)  
+- Хранит актуальные тарифы в PostgreSQL  
+- Обновляет тарифы за текущий день, если данные изменились  
+- Выгружает данные в произвольное количество Google Таблиц (листы `stocks_coefs`)  
+- Работает в Docker контейнерах  
 
-Все настройки можно найти в файлах:
-- compose.yaml
-- dockerfile
-- package.json
-- tsconfig.json
-- src/config/env/env.ts
-- src/config/knex/knexfile.ts
+---
 
-## Команды:
+## Настройка и запуск сервиса
 
-Запуск базы данных:
-```bash
-docker compose up -d --build postgres
-```
-
-Для выполнения миграций и сидов не из контейнера:
-```bash
-npm run knex:dev migrate latest
-```
+#### 1. Склонировать репозиторий
 
 ```bash
-npm run knex:dev seed run
+git clone https://github.com/DinarMin/wb-service-script.git
 ```
-Также можно использовать и остальные команды (`migrate make <name>`,`migrate up`, `migrate down` и т.д.)
 
-Для запуска приложения в режиме разработки:
+#### 2. Заполнить данные в .env.example и переименовать в .env
+
+```
+API_KEY_WB=ваш_api_key_WB
+
+GOOGLE_APPLICATION_CREDENTIALS='ваши_данные_для_гугл_таблицы(обязательно без переносов и в этих кавычках)'
+GOOGLE_SHEETS_ID=ваш_sheets_id
+```
+
+#### 3. Убедиться об наличии docker и docker-compose на вашем OC
+
 ```bash
-npm run dev
+docker -v
+docker-compose -v
 ```
 
-Запуск проверки самого приложения:
+##### Если версии не отображаются, установите:
+
+##### Docker:
+___
+##### (Windows)
+```
+https://docs.docker.com/desktop/setup/install/windows-install/
+```
+
+##### (Linux)
+```
+https://docs.docker.com/desktop/setup/install/linux/
+```
+
+##### (Mac)
+```
+https://docs.docker.com/desktop/setup/install/mac-install/
+```
+##### Docker-compose: 
+____
+##### (General)
+```
+https://docs.docker.com/compose/install/
+```
+
+#### 4. Установка и запуск контейнера
+
+##### Запустить терминал в директории клонированного проекта и прописать команду:
 ```bash
-docker compose up -d --build app
+docker compose up
 ```
 
-Для финальной проверки рекомендую:
-```bash
-docker compose down --rmi local --volumes
-docker compose up --build
-```
 
-PS: С наилучшими пожеланиями!
+
