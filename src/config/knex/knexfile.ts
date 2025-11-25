@@ -26,7 +26,7 @@ const knegConfigs: Record<typeof NODE_ENV, Knex.Config> = {
                 port: env.POSTGRES_PORT ?? 5432, 
                 database: env.POSTGRES_DB ?? "postgres",
                 user: env.POSTGRES_USER ?? "postgres",
-                password: env.POSTGRES_PASSWORD ?? "dinar2202",
+                password: env.POSTGRES_PASSWORD ?? "postgres",
             }),
         pool: {
             min: 2,
@@ -60,7 +60,7 @@ const knegConfigs: Record<typeof NODE_ENV, Knex.Config> = {
         },
         migrations: {
             stub: 'dist/config/knex/migration.stub.js',
-            directory: path.join(__dirname, "..", "..", "dist", "postgres", "migrations"),
+            directory: path.join(__dirname, "..", "..", "postgres", "migrations"),
             tableName: "migrations",
             extension: "js",
         },
