@@ -31,6 +31,17 @@ API_KEY_WB=ваш_api_key_WB
 
 GOOGLE_APPLICATION_CREDENTIALS='ваши_данные_для_гугл_таблицы(обязательно без переносов и в этих кавычках)'
 GOOGLE_SHEETS_ID=ваш_sheets_id
+
+UPDATE_CRON=0 * * * * #пример: каждый час (время для обновление данных)
+            пример:  # ┌────────────── second (optional)
+                     # │ ┌──────────── minute
+                     # │ │ ┌────────── hour
+                     # │ │ │ ┌──────── day of month
+                     # │ │ │ │ ┌────── month
+                     # │ │ │ │ │ ┌──── day of week
+                     # │ │ │ │ │ │
+                     # │ │ │ │ │ │
+                     # * * * * * *
 ```
 
 #### 3. Убедиться об наличии docker и docker-compose на вашем OC
