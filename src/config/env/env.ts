@@ -24,6 +24,7 @@ const envSchema = z.object({
     API_KEY_WB: z.string().min(1, "WB API KEY отсутствует или недействителен"),
     GOOGLE_APPLICATION_CREDENTIALS: z.string().min(1, "GOOGLE SHEETS CREGENTIALS отсутствует или недействителен"),
     GOOGLE_SHEETS_ID: z.string().min(1, "GOOGLE_SHEETS_ID отсутствует или недействителен"),
+    UPDATE_CRON: z.string().min(1, "Время запуска задачи не определен"),
 });
 
 const env = envSchema.parse({
@@ -37,6 +38,7 @@ const env = envSchema.parse({
     API_KEY_WB: process.env.API_KEY_WB,
     GOOGLE_APPLICATION_CREDENTIALS: process.env.GOOGLE_APPLICATION_CREDENTIALS,
     GOOGLE_SHEETS_ID: process.env.GOOGLE_SHEETS_ID,
+    UPDATE_CRON: process.env.UPDATE_CRON,
 });
 
 export default env;
