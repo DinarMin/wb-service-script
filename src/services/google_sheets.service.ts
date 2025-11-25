@@ -99,11 +99,3 @@ function toSheetsConversion(rows: fullDataWB[]): any[][] {
 
     return [headers, ...values];
 }
-
-/* 1. Обработка ошибок +++
-    2. Воркер
-    3. Описания проекта( скрипта)
-    4. Докер
-Сдать 25.11 до 00:00
-
-*/
