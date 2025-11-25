@@ -78,30 +78,47 @@ export const seed = {
     },
 };
 
-// Запись данных в БД
+/* 
+Запись данных в Базу данных
+param tariffs Массив структурированных данных
+return {Promise<void>} Ничего не возвращает либо Ошибку error
+*/
 
 export async function saveTariffs(tariffs: any): Promise<void> {
     try {
-        return await knex.transaction(async (t) => {
-            for (const item of tariffs) {
-                await t("tariffs").insert({
-                    date: item.date,
-                    warehouse_name: item.warehouse_name,
-                    geo_name: item.geo_name,
-                    box_storage_liter: item.box_storage_liter,
-                    box_storage_coef_expr: item.box_storage_coef_expr,
-                    box_storage_base: item.box_storage_base,
-                    box_delivery_marketplace_liter: item.box_delivery_marketplace_liter,
-                    box_delivery_marketplace_coef_expr: item.box_delivery_marketplace_coef_expr,
-                    box_delivery_marketplace_base: item.box_delivery_marketplace_base,
-                    box_delivery_liter: item.box_delivery_liter,
-                    box_delivery_coef_expr: item.box_delivery_coef_expr,
-                    box_delivery_base: item.box_delivery_base,
-                });
+        console.log("⌛Начат процесс записи актуальных данных с API Wildberries в базу данных.")
+        return await knex.transaction(async (knex) => {
+            for (const tariff of tariffs) {
+                const exists = await knex("tariffs")
+                    .where({
+                        warehouse_name: tariff.warehouse_name,
+                        geo_name: tariff.geo_name,
+                    })
+                    .first();
+
+                if (!exists) {
+                    await knex("tariffs").insert({
+                        ...tariff,
+                    });
+                } else {
+                    await knex("tariffs").where({ id: exists.id }).update({
+                        date: tariff.date,
+                        box_storage_liter: tariff.box_storage_liter,
+                        box_storage_coef_expr: tariff.box_storage_coef_expr,
+                        box_storage_base: tariff.box_storage_base,
+                        box_delivery_marketplace_liter: tariff.box_delivery_marketplace_liter,
+                        box_delivery_marketplace_coef_expr: tariff.box_delivery_marketplace_coef_expr,
+                        box_delivery_marketplace_base: tariff.box_delivery_marketplace_base,
+                        box_delivery_liter: tariff.box_delivery_liter,
+                        box_delivery_coef_expr: tariff.box_delivery_coef_expr,
+                        box_delivery_base: tariff.box_delivery_base,
+                    });
+                }
             }
+            console.log("✅ Запись актуальных данных успешно завершена.")
         });
     } catch (error) {
         console.error(error);
-        throw new Error("Ошибка в транзакции/записи WB API tariffs в базу данных");
+        throw new Error(`❌ Ошибка при записи тарифов: ${error instanceof Error ? error.message : error}`);
     }
 }
